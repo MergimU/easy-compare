@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
+  /* --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255; */
+}
+
+[data-theme='light'] {
+  --input-color: grey;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,3 +29,9 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer base {
+ input {
+  color: var(--input-color);
+ } 
+} 

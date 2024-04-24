@@ -3,7 +3,7 @@ export default function Login() {
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse gap-8">
         <div className="text-center lg:text-left">
-          <h1 className="text-2xl font-bold text-slate-400">OptionWise</h1>
+          <h1 className="text-3xl font-bold text-slate-400">OptionWise</h1>
           <p className="py-6 text-slate-400">Easily compare two options and make the best choice!</p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
