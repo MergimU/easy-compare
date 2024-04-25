@@ -1,9 +1,16 @@
-import NavbarUI from '../ui/navbar'
+import Link from 'next/link';
 
 export default function Dashboard() {
   return (
-    <main >
-      <NavbarUI />
-    </main>
+    <div className='prose'>
+      <ul>
+        <li>
+          <Link href="/dashboard/project-1">Project 1</Link>
+        </li>
+        <li>
+          <Link href="/dashboard/project-2">Project 2</Link>
+        </li>
+      </ul>
+    </div>
   )
 }

@@ -32,6 +32,6 @@ body {
 
 @layer base {
  input {
-  color: var(--input-color);
- } 
+    color: var(--input-color);
+  } 
 } 

@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function NavbarUI() {
   return (
@@ -30,17 +31,22 @@ export default function NavbarUI() {
             </div>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li className="text-neutral">
-                <a className="justify-between">
-                  Profile
-                  <span className="badge badge-warning">Soon...</span>
-                </a>
+                <Link href="/dashboard" className="justify-between">
+                  Projects
+                </Link>
               </li>
               <li className="text-neutral">
-                <a className="justify-between">
-                  Settings
-                  <span className="badge badge-warning">Soon...</span></a>
+                <Link href="/dashboard/profile" className="justify-between">
+                  Profile
+                  <span className="badge badge-warning">Soon...</span>
+                </Link>
               </li>
-              <li className="text-neutral"><a>Logout</a></li>
+              <li className="text-neutral">
+                <Link href="/dashboard/settings" className="justify-between">
+                  Settings
+                  <span className="badge badge-warning">Soon...</span></Link>
+              </li>
+              <li className="text-neutral"><Link href="/login">Logout</Link></li>
             </ul>
           </div>
         </div>
