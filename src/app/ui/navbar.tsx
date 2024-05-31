@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 // Since usePathname() is a client hook, you need to extract the nav links into a Client Component, which can be imported into your layout or template:
 import { usePathname } from 'next/navigation'
+import { createClient } from '@app/utils/supabase/server';
 
 export default function NavbarUI() {
   const pathname = usePathname();
@@ -52,7 +53,7 @@ export default function NavbarUI() {
                   Settings
                   <span className="badge badge-warning">Soon...</span></Link>
               </li>
-              <li className="text-neutral"><Link href="/login">Logout</Link></li>
+              <li className="text-neutral"><Link href="/logout">Log out</Link></li>
             </ul>
           </div>
         </div>
