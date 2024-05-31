@@ -1,7 +1,10 @@
-import { login } from '@app/signup/actions';
+import { signup } from '@app/signup/actions';
 import { SubmitButton } from '@app/ui/submit-button';
 
-export default function Login({ searchParams }: { searchParams: { message: string } }) {
+export default function SignUp({
+  searchParams
+}: { searchParams: { message: string } }) {
+
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse gap-8">
@@ -15,19 +18,23 @@ export default function Login({ searchParams }: { searchParams: { message: strin
               <label htmlFor="email" className="label">
                 <span className="label-text">Email</span>
               </label>
-              <input type="email" name="email" placeholder="email" autoComplete="username" className="input input-bordered" required />
+              <input id="email" name="email" type="email" placeholder="email" autoComplete="username" className="input input-bordered" required />
             </div>
+
             <div className="form-control">
               <label htmlFor="password" className="label">
                 <span className="label-text">Password</span>
               </label>
-              <input type="password" name="password" placeholder="password" autoComplete="current-password" className="input input-bordered" required />
-              <label className="label">
-                <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-              </label>
+              <input id="password" name="password" type="password" placeholder="password" autoComplete="current-password" className="input input-bordered" required />
             </div>
-            <div className="form-control mt-6">
-              <SubmitButton formAction={login}>Log in</SubmitButton>
+            <div className="form-control mt-6 gap-2">
+              <SubmitButton
+                formAction={signup}
+                className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
+                pendingText="Signing In..."
+              >
+                Sign up
+              </SubmitButton>
             </div>
             {searchParams?.message && (
               <h1 className="text-red-600">Message: {searchParams.message}</h1>

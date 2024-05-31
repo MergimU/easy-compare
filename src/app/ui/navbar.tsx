@@ -1,7 +1,12 @@
+'use client';
+
 import Image from 'next/image'
 import Link from 'next/link'
+// Since usePathname() is a client hook, you need to extract the nav links into a Client Component, which can be imported into your layout or template:
+import { usePathname } from 'next/navigation'
 
 export default function NavbarUI() {
+  const pathname = usePathname();
   return (
     <div className="navbar">
       <div className="navbar-start">
@@ -31,7 +36,8 @@ export default function NavbarUI() {
             </div>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li className="text-neutral">
-                <Link href="/dashboard" className="justify-between">
+                {/* Link provied prefetching */}
+                <Link href="/dashboard" className={`justify-between ${pathname === '/dashboard' ? 'active' : ''}`}>
                   Projects
                 </Link>
               </li>
