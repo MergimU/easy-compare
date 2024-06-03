@@ -11,6 +11,7 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [
+      // Specify the url from which next should call external urls to prevent calling insecure ones.
       {
         protocol: 'https',
         hostname: 'daisyui.com',

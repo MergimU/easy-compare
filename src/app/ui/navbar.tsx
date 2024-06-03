@@ -4,31 +4,38 @@ import Image from 'next/image'
 import Link from 'next/link'
 // Since usePathname() is a client hook, you need to extract the nav links into a Client Component, which can be imported into your layout or template:
 import { usePathname } from 'next/navigation'
-import { createClient } from '@app/utils/supabase/server';
+import { useEffect, useState } from 'react';
 
 export default function NavbarUI() {
+  const [isProject, setIsProject] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setIsProject(pathname.includes('/dashboard/') ? true : false)
+  }, [pathname]);
+
   return (
-    <div className="navbar">
-      <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 stroke-slate-600" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+    <div className="navbar relative">
+      {/* <div className="navbar-center absolute inset-x-1/2 w-2/3"> */}
+      <div className="navbar-center ml-5`">
+        <Link href='/dashboard' className="text-xl text-neutral-800 font-semibold">OptionWise <span className='hidden sm:inline'>: Compare & Decide</span></Link>
+      </div>
+      {isProject && (
+        <div className="navbar-start w-auto ml-5">
+          <div className="dropdown">
+            <div tabIndex={1} role="button" className="btn rounded-full w-12 h-12">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 stroke-slate-600" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+            </div>
+            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow bg-base-100 rounded-box w-52 gap-2">
+              <li className='text-neutral'><a>Edit project</a></li>
+              <li className='text-neutral'><a>Share project</a></li>
+              <li className='text-neutral'><a>Delete project</a></li>
+            </ul>
           </div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow bg-base-100 rounded-box w-52 gap-2">
-            <li className='text-neutral'><a>Apple vs Android</a></li>
-            <li className='text-neutral'><a>Peanut butter vs Nutella</a></li>
-          </ul>
         </div>
-      </div>
-      <div className="navbar-center">
-        <h1 className="text-xl text-neutral-800 font-semibold">OptionWise <span className='hidden sm:inline'>: Compare & Decide</span></h1>
-      </div>
-      <div className="navbar-end">
+      )}
+      <div className="ml-auto">
         <div className="flex items-center gap-2">
-          <div className="form-control">
-            <input type="text" placeholder="Search" className="input input-bordered w-24 h-10 md:w-auto" />
-          </div>
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
@@ -37,9 +44,9 @@ export default function NavbarUI() {
             </div>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li className="text-neutral">
-                {/* Link provied prefetching */}
+                {/* Link prefetches the routes in background */}
                 <Link href="/dashboard" className={`justify-between ${pathname === '/dashboard' ? 'active' : ''}`}>
-                  Projects
+                  Dashboard
                 </Link>
               </li>
               <li className="text-neutral">
