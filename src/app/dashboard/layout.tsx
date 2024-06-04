@@ -4,7 +4,8 @@ import Loading from './loading'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-screen flex-row md:flex-row md:overflow-hidden">
+    // <div className="h-screen flex-row md:flex-row md:overflow-hidden">
+    <div className="h-screen flex-row md:flex-row mb-20">
       <div className="w-full mb-8">
         <NavbarUI />
       </div>
