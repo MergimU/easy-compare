@@ -4,7 +4,7 @@
 Easy Compare is intended for simplifying comparison between two different items.  Whether you're deciding on a new front-end framework to use, the best movie to watch, or even which vacation destination to choose, Easy Compare helps you weigh the pros and cons in a clear and organized way.
 
 ## Getting Started
-First add your [supabase](https://supabase.com/) private keys to `.env.exmaple` and rename the file to `.env.local`
+First add your [supabase](https://supabase.com/) private keys to `.env.exmaple` and rename the file to `.env`
 ``` env
 NEXT_PUBLIC_SUPABASE_URL= 
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
