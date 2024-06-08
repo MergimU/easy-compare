@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@app/utils/supabase/server';
+import { getNotes } from 'drizzle/migrate';
 
 export default async function Dashboard() {
   const supabase = createClient();
@@ -10,6 +11,10 @@ export default async function Dashboard() {
   if (!user) {
     return redirect("/login");
   }
+
+  let dbNotes = await getNotes();
+  console.log('notes', dbNotes);
+
   return (
     <div className="w-screen flex items-center flex-col p-8">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
