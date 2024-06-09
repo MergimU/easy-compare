@@ -1,12 +1,12 @@
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
-import { notesTable } from './schema'
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { db, connection } from './db';
 
-const connectionString = process.env.DATABASE_URL
-
-export const client = postgres(connectionString as string)
-export const db = drizzle(client);
-
-export async function getNotes() {
-  return await db.select().from(notesTable) 
+// This will run migrations on the database, skipping the ones already applied
+async function startMigration() {
+  await migrate(db, { migrationsFolder: './src/drizzle/migrations' });
+  
+  // Don't forget to close the connection, otherwise the script will hang
+  await connection.end();
 }
+
+startMigration();

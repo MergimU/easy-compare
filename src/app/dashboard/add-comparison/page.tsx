@@ -51,14 +51,14 @@ export default function AddComparison() {
             <label htmlFor="title1" className="label">
               <span className="label-text">Title</span>
             </label>
-            <input type="text" name="title1" placeholder="i.e: ReactJS" autoComplete="username" className="input input-bordered" required />
+            <input type="text" name="title1" placeholder="e.g: ReactJS" autoComplete="username" className="input input-bordered" required />
           </div>
           <span className='font-bold'>VS</span>
           <div className="form-control flex-1">
             <label htmlFor="title2" className="label">
               <span className="label-text">Title</span>
             </label>
-            <input type="text" name="title2" placeholder="i.e: VueJS" autoComplete="username" className="input input-bordered" required />
+            <input type="text" name="title2" placeholder="e.g: VueJS" autoComplete="username" className="input input-bordered" required />
           </div>
         </div>
         <br />

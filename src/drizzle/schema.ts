@@ -1,9 +1,9 @@
 import { integer, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
-// user table test
-export const userTable = pgTable("user", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  name: varchar("name", { length: 255 }).notNull()
+export const comparisons = pgTable("comparisons", {
+  id: uuid("id").primaryKey(),
+  title: varchar("title", {length: 256}).notNull(),
+  description: varchar("description", {length: 256}).notNull(),
 })
 
 // user table test
