@@ -7,6 +7,6 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.DATABASE_URL as string,
   },
-  verbose: true, // when we generate migrations, it will tell us exactly what changed
+  verbose: true, // when we generate migrations, it will tell us exactly what changed in the console
   strict: true
 });
