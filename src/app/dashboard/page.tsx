@@ -1,17 +1,7 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { createClient } from '@app/utils/supabase/server';
 import { getNotes, getUsers } from 'drizzle/db';
 
 export default async function Dashboard() {
-  const supabase = createClient();
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/login");
-  }
-
   let dbUsers = getUsers();
   console.log('users', dbUsers);
 

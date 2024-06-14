@@ -18,7 +18,7 @@ export const updateSession = async(request: NextRequest) => {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          // If the cookie is updated, update the cookies for the request and response
+          // Update the cookies for both request and response
           request.cookies.set({
             name,
             value,
@@ -57,7 +57,11 @@ export const updateSession = async(request: NextRequest) => {
     }
   )
 
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser();
 
-  return response
+  if (!user && request.nextUrl.pathname !== '/login') {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  return response;
 }

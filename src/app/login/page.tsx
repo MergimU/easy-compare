@@ -1,16 +1,7 @@
 import { login } from '@app/signup/actions';
 import { SubmitButton } from '@app/ui/submit-button';
-import { createClient } from '@app/utils/supabase/server'
-import { redirect } from 'next/navigation';
 
 export default async function Login({ searchParams }: { searchParams: { message: string } }) {
-  const supabase = createClient();
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (user) {
-    return redirect("/dashboard");
-  }
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse gap-8">
