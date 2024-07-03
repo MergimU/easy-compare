@@ -1,5 +1,6 @@
 import { login } from '@app/signup/actions';
 import { SubmitButton } from '@app/ui/submit-button';
+import Link from 'next/link';
 
 export default async function Login({ searchParams }: { searchParams: { message: string } }) {
   return (
@@ -22,9 +23,8 @@ export default async function Login({ searchParams }: { searchParams: { message:
                 <span className="label-text">Password</span>
               </label>
               <input type="password" name="password" placeholder="password" autoComplete="current-password" className="input input-bordered" required />
-              <label className="label">
-                <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-              </label>
+              <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+              <Link className='label-text-alt link pl-1' href={'/signup'}>No acccount? Create one</Link>
             </div>
             <div className="form-control mt-6">
               <SubmitButton formAction={login}>Log in</SubmitButton>

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 // Since Supabase is being called from an Action, use the client defined in:
 import { createClient } from '@app/utils/supabase/server';
 import { headers } from 'next/headers';
+import { createUser } from 'drizzle/db';
 
 /**
  * 
@@ -34,7 +35,7 @@ export const signup = async (formData: FormData) => {
   const password = formData.get("password") as string;
   const supabase = createClient();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -46,6 +47,20 @@ export const signup = async (formData: FormData) => {
     return redirect(`/signup?message=${error}`)
   }
 
+  try {
+    if (data.user?.id) {
+      await createUser({
+        id: data.user.id,
+        email: email,
+        createdAt: new Date(),
+        role: 'ADMIN',
+      }) 
+    }
+  } catch(err) {
+    console.log('error db inserting user', err);
+    return redirect(`/login?message=${error}`);
+  }
+
   revalidatePath('/', 'layout');
-  return redirect('/login?message=Account create successfully');
+  return redirect('/login?message=Account created successfully');
 }

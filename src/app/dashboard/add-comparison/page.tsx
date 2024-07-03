@@ -51,30 +51,30 @@ export default function AddComparison() {
             <label htmlFor="title1" className="label">
               <span className="label-text">Title</span>
             </label>
-            <input type="text" name="title1" placeholder="e.g: ReactJS" autoComplete="username" className="input input-bordered" required />
+            <input type="text" id="title1" name="title1" placeholder="e.g: ReactJS" autoComplete="username" className="input input-bordered" required />
           </div>
           <span className='font-bold'>VS</span>
           <div className="form-control flex-1">
             <label htmlFor="title2" className="label">
               <span className="label-text">Title</span>
             </label>
-            <input type="text" name="title2" placeholder="e.g: VueJS" autoComplete="username" className="input input-bordered" required />
+            <input type="text" id="title2" name="title2" placeholder="e.g: VueJS" autoComplete="username" className="input input-bordered" required />
           </div>
         </div>
         <br />
         {formFields.map((comparisonField, index) => (
           <div key={index} className="card bg-base-100 shadow-2xl p-6 mb-6">
             <div className="form-control">
-              <input type="text" name="title" placeholder="State managers, Learning curve, Mobile support..." value={comparisonField.title} autoComplete="username" className="input input-bordered" required />
+              <input type="text" name="title" placeholder="State managers, Learning curve, Mobile support..." defaultValue={comparisonField.title} autoComplete="username" className="input input-bordered" required />
             </div>
             <br />
             <div className="flex flex-row items-center gap-4">
               <div className="form-control flex-1">
-                <textarea name="textarea1" value={comparisonField.leftCompare} placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
+                <textarea name="textarea1" defaultValue={comparisonField.leftCompare} placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
               </div>
               <span className='font-bold'>/</span>
               <div className="form-control flex-1">
-                <textarea name="textarea1" value={comparisonField.rightCompare} placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
+                <textarea name="textarea1" defaultValue={comparisonField.rightCompare} placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
               </div>
             </div>
             <button onClick={() => deleteComparisonField(index)} className="btn btn-outline btn-error btn-x mt-8">Delete Field</button>
