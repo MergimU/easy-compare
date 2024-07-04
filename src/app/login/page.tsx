@@ -27,7 +27,7 @@ export default async function Login({ searchParams }: { searchParams: { message:
               <Link className='label-text-alt link pl-1' href={'/signup'}>No acccount? Create one</Link>
             </div>
             <div className="form-control mt-6">
-              <SubmitButton formAction={login}>Log in</SubmitButton>
+              <SubmitButton formAction={login} pendingText='Signing In...'>Log in</SubmitButton>
             </div>
             {searchParams?.message && (
               <h1 className="text-red-600">Message: {searchParams.message}</h1>
