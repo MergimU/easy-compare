@@ -14,8 +14,7 @@ export const generateMetadata = ({ params }: Props): Metadata => {
 }
 
 export default async function Project({ params }: Props) {
-
-  let getId = params.project.split('-')[1]; // path is project-2000
+  let getId = params.project.split('-')[1]; // path is project-[project-id-here]
 
   if (parseInt(getId) > 100) {
     notFound();

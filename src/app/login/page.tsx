@@ -24,7 +24,7 @@ export default async function Login({ searchParams }: { searchParams: { message:
               </label>
               <input type="password" name="password" placeholder="password" autoComplete="current-password" className="input input-bordered" required />
               <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-              <Link className='label-text-alt link pl-1' href={'/signup'}>No acccount? Create one</Link>
+              <Link className='label-text-alt link pl-1' href={'/signup'}>No acccount? Create one!</Link>
             </div>
             <div className="form-control mt-6">
               <SubmitButton formAction={login} pendingText='Signing In...'>Log in</SubmitButton>

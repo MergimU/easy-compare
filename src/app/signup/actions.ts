@@ -2,10 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-// Since Supabase is being called from an Action, use the client defined in:
+// Since Supabase is being called from an Action, use the client defined in server:
 import { createClient } from '@app/utils/supabase/server';
 import { headers } from 'next/headers';
-import { createUser } from 'drizzle/db';
+import { createUser } from 'drizzle/queries';
 
 /**
  * 
@@ -29,6 +29,11 @@ export const login = async (formData: FormData) => {
   return redirect('/dashboard')
 }
 
+/**
+ * 
+ * @param formData User email and password
+ * @returns New created user 
+ */
 export const signup = async (formData: FormData) => {
   const origin = headers().get("origin");
   const email = formData.get("email") as string;

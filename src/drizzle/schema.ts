@@ -15,8 +15,8 @@ export const UsersTable = pgTable("users", {
   }
 })
 
-export const ComparisonHeaderTable = pgTable("comparisonHeader", {
-  id: uuid("id").primaryKey().notNull(),
+export const Comparison = pgTable("comparison", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
   title: varchar("title", {length: 256}).notNull(),
   description: varchar("description", {length: 256}),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -24,23 +24,23 @@ export const ComparisonHeaderTable = pgTable("comparisonHeader", {
   authorId: uuid("authorId").references(() => UsersTable.id).notNull()
 })
 
-export const ComparisonBodyTable = pgTable("comparisonBody", {
-  id: uuid("id").primaryKey().notNull(),
+export const ComparisonField = pgTable("comparisonField", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
   title: varchar("title", {length: 256}).notNull(),
   leftComparison: varchar("leftComparison", { length: 256 }),
   rightComparison: varchar("rightComparison", { length: 256 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-  comparisonId: uuid("comparisonId").references(() => ComparisonHeaderTable.id).notNull()
+  comparisonId: uuid("comparisonId").references(() => Comparison.id).notNull()
 })
 
 export const ComparisonTable = pgTable("comparisonTable", {
-  comparisonHeaderId: uuid("comparisonHeaderId").references(() => ComparisonHeaderTable.id).notNull(),
-  comparisonBodyId: uuid("comparisonBodyId").references(() => ComparisonBodyTable.id).notNull()
+  comparisonId: uuid("comparisonId").references(() => Comparison.id).notNull(),
+  comparisonFieldId: uuid("comparisonFieldId").references(() => ComparisonField.id).notNull()
 }, table => {
   return {
     // Composite primaryKey
-    pk: primaryKey({ columns: [table.comparisonHeaderId, table.comparisonBodyId]})
+    pk: primaryKey({ columns: [table.comparisonId, table.comparisonFieldId]})
   }
 })
 

@@ -38,3 +38,7 @@ next-env.d.ts
 
 # Drizzle snapshots
 /src/drizzle/migrations/*
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
