@@ -18,7 +18,7 @@
     "@supabase/supabase-js": "^2.43.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.31.1",
-    "next": "14.1.4",
+    "next": "^14.2.5",
     "next-auth": "^4.24.7",
     "postgres": "^3.4.4",
     "react": "^18",
