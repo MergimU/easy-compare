@@ -6,7 +6,7 @@ on:
     branches: [ main, master ]
 
 env:
-  name: 'Dev mode'
+  NAME: 'Dev mode'
 
 jobs:
   test:
@@ -17,7 +17,7 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 20
-    - name: Print Name
+    - name: Print dependencies
       run: echo "Hello $NAME"
 
     - name: Install dependencies
