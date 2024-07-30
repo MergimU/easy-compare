@@ -30,7 +30,6 @@ export default function SignUp({
             <div className="form-control mt-6 gap-2">
               <SubmitButton
                 formAction={signup}
-                className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
                 pendingText="Signing Up..."
               >
                 Sign up

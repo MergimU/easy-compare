@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { getNotes, getUsers } from 'drizzle/queries';
+import { getNotes } from 'drizzle/queries';
 
 export default async function Dashboard() {
-  // let dbUsers = await getUsers();
   let dbNotes = await getNotes();
 
   return (

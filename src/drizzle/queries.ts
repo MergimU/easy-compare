@@ -7,7 +7,12 @@ import { NewUser } from './dbTypes';
 import { userSession } from '@app/actions/user';
 
 export const getNotes = async () => {
-  return await db.select().from(schema.notesTable);
+  try {
+    return await db.select().from(schema.notesTable);
+  } catch (error) {
+    console.error('Error getting data', error);
+    return null;
+  }
 };
 
 export const createUser = async (user: NewUser) => {

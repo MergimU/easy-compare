@@ -60,7 +60,7 @@ export default function NavbarUI() {
                   Settings
                   <span className="badge badge-warning">Soon...</span></Link>
               </li>
-              <li className="text-neutral"><Link href="/logout">Log out</Link></li>
+              <li className="text-neutral"><Link href="/api/logout">Log out</Link></li>
             </ul>
           </div>
         </div>
