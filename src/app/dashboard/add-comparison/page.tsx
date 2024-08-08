@@ -1,46 +1,66 @@
 'use client';
 
 import { useState } from 'react';
-import { SubmitButton } from '@app/ui/submit-button'
-import { PlusCircleIcon } from '@heroicons/react/16/solid'
+import { SubmitButton } from '@app/ui/submit-button';
+import { PlusCircleIcon } from '@heroicons/react/16/solid';
 import { createComparison } from 'drizzle/queries';
 
-export type ComparisonField = {
-  title: string,
-  leftCompare: string,
-  rightCompare: string
-}
+import type { ComparisonField, NewComparison } from 'drizzle/dbTypes';
+import { ComparisonWinner } from 'drizzle/schema'; 
 
 export default function AddComparison() {
-  const [formFields, setFormFields] = useState<ComparisonField[]>([
+  const [comparison, setComparison] = useState<Omit<NewComparison, 'id' | 'authorId'>>({
+      leftTitle: '',
+      rightTitle: '',
+      description: '',
+      winnerIs: ComparisonWinner.enumValues[0],
+  });
+
+  const [comparisonFields, setComparisonFields] = useState<Omit<ComparisonField, 'id' | 'comparisonId'>[]>([
     {
-      title: 'Test 1',
-      leftCompare: '',
-      rightCompare: ''
-    },
-    {
-      title: 'Filled for test',
-      leftCompare: 'vue',
-      rightCompare: 'react'
-    },
-  ])
+      title: '',
+      leftComparison: '',
+      rightComparison: '',
+      winnerIs: ComparisonWinner.enumValues[0],
+    }
+  ]);
 
   const addAnotherComparisonField = () => {
-    setFormFields([...formFields, {
-      title: '',
-      leftCompare: '',
-      rightCompare: ''
-    }])
-  }
+    setComparisonFields( prevState => {
+      return [...prevState, {
+        title: '',
+        leftComparison: '',
+        rightComparison: '',
+        winnerIs: ComparisonWinner.enumValues[1],
+      }]
+    })
+  };
 
   const deleteComparisonField = (index: number) => {
-    setFormFields(formFields.filter((_, i) => i !== index))
+    setComparisonFields(comparisonFields.filter((_, i) => i !== index))
+  };
+
+  const handleComparisonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setComparison({
+      ...comparison, [event.target.name]: event.target.value
+    })
+  };
+
+  const handleComparisonFieldChange = (index: number, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setComparisonFields((prevState) => {
+      const updatedFields = [...prevState];
+      updatedFields[index] = {
+        ...updatedFields[index],
+        [event.target.name]: event.target.value,
+      }
+      return updatedFields
+    })   
   }
 
   // Fix this form
   const handleSubmit = async () => {
     try {
-      return await createComparison()
+      return await createComparison({comparison, comparisonFields})
     } catch (error) {
       console.log('failed to add:', error);
     }
@@ -49,36 +69,33 @@ export default function AddComparison() {
   return (
     <div className="prose text-center mx-auto">
       <p>Please choose the titles of what you are comparing and add as many input fields as you want for comparison</p>
-      <form className="gap- flex flex-col" onSubmit={handleSubmit}>
-        <div className="card bg-base-100 shadow-2xl gap-4 p-6 flex flex-row">
-          <div className="form-control flex-1">
-            <label htmlFor="title1" className="label">
-              <span className="label-text">Title</span>
-            </label>
-            <input type="text" id="title1" name="title1" placeholder="e.g: ReactJS" autoComplete="username" className="input input-bordered" />
+      <form className="flex flex-col" onSubmit={handleSubmit}>
+        <div className="card bg-base-100 grid grid-cols-7 shadow-2xl gap-6 p-6">
+          <div className="form-control gird col-span-3">
+            <input onChange={(e) => handleComparisonChange(e)} type="text" id="leftTitle" name="leftTitle" placeholder="Title one" className="input input-bordered" />
           </div>
           <span className='font-bold'>VS</span>
-          <div className="form-control flex-1">
-            <label htmlFor="title2" className="label">
-              <span className="label-text">Title</span>
-            </label>
-            <input type="text" id="title2" name="title2" placeholder="e.g: VueJS" autoComplete="username" className="input input-bordered" />
+          <div className="form-control col-span-3">
+            <input onChange={(e) => handleComparisonChange(e)} type="text" id="rightTitle" name="rightTitle" placeholder="Title two" className="input input-bordered" />
+          </div>
+          <div className="form-control col-span-7">
+            <input onChange={(e) => handleComparisonChange(e)} type="text" id="description" name="description" placeholder="Comparison Description" className="input input-bordered" />
           </div>
         </div>
         <br />
-        {formFields.map((comparisonField, index) => (
+        {comparisonFields.map((comparisonField, index) => (
           <div key={index} className="card bg-base-100 shadow-2xl p-6 mb-6">
             <div className="form-control">
-              <input type="text" name="title" placeholder="State managers, Learning curve, Mobile support..." defaultValue={comparisonField.title} autoComplete="username" className="input input-bordered" />
+              <input onChange={(e) => handleComparisonFieldChange(index, e)} type="text" name="title" placeholder="State managers, Learning curve, Mobile support..." className="input input-bordered" />
             </div>
             <br />
             <div className="flex flex-row items-center gap-4">
               <div className="form-control flex-1">
-                <textarea name="textarea1" defaultValue={comparisonField.leftCompare} placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
+                <textarea onChange={(e) => handleComparisonFieldChange(index, e)} name="leftComparison" placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
               </div>
               <span className='font-bold'>/</span>
               <div className="form-control flex-1">
-                <textarea name="textarea1" defaultValue={comparisonField.rightCompare} placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
+                <textarea onChange={(e) => handleComparisonFieldChange(index, e)} name="rightComparison" placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
               </div>
             </div>
             <button onClick={() => deleteComparisonField(index)} className="btn btn-outline btn-error btn-x mt-8">Delete Field</button>
@@ -89,7 +106,7 @@ export default function AddComparison() {
           <PlusCircleIcon className='size-8 text-grey-400' />
           <p className='my-2'>Add another input field</p>
         </div>
-        <SubmitButton className='btn btn-primary mt-6'>Add comparison</SubmitButton>
+        <SubmitButton pendingText='Pending...' className='btn btn-primary mt-6'>Add comparison</SubmitButton>
       </form>
     </div>
   )

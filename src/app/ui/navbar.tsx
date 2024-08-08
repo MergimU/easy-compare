@@ -52,7 +52,6 @@ export default function NavbarUI() {
               <li className="text-neutral">
                 <Link href="/dashboard/profile" className="justify-between">
                   Profile
-                  <span className="badge badge-warning">Soon...</span>
                 </Link>
               </li>
               <li className="text-neutral">
