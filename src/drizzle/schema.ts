@@ -28,7 +28,7 @@ export const ComparisonField = pgTable("comparisonField", {
   title: varchar("title", {length: 256}).notNull().unique(),
   leftComparison: varchar("leftComparison", { length: 256 }),
   rightComparison: varchar("rightComparison", { length: 256 }),
-  winnerIs: ComparisonWinner("winner").notNull(),
+  winnerField: ComparisonWinner("winner").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   comparisonId: uuid("comparisonId").references(() => Comparison.id).notNull()

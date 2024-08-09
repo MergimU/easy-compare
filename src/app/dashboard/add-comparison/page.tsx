@@ -6,14 +6,14 @@ import { PlusCircleIcon } from '@heroicons/react/16/solid';
 import { createComparison } from 'drizzle/queries';
 
 import type { ComparisonField, NewComparison } from 'drizzle/dbTypes';
-import { ComparisonWinner } from 'drizzle/schema'; 
+import { ComparisonWinner } from 'drizzle/schema';
 
 export default function AddComparison() {
   const [comparison, setComparison] = useState<Omit<NewComparison, 'id' | 'authorId'>>({
-      leftTitle: '',
-      rightTitle: '',
-      description: '',
-      winnerIs: ComparisonWinner.enumValues[0],
+    leftTitle: '',
+    rightTitle: '',
+    description: '',
+    winnerIs: ComparisonWinner.enumValues[0],
   });
 
   const [comparisonFields, setComparisonFields] = useState<Omit<ComparisonField, 'id' | 'comparisonId'>[]>([
@@ -21,17 +21,17 @@ export default function AddComparison() {
       title: '',
       leftComparison: '',
       rightComparison: '',
-      winnerIs: ComparisonWinner.enumValues[0],
+      winnerField: ComparisonWinner.enumValues[0],
     }
   ]);
 
   const addAnotherComparisonField = () => {
-    setComparisonFields( prevState => {
+    setComparisonFields(prevState => {
       return [...prevState, {
         title: '',
         leftComparison: '',
         rightComparison: '',
-        winnerIs: ComparisonWinner.enumValues[1],
+        winnerField: ComparisonWinner.enumValues[0],
       }]
     })
   };
@@ -46,7 +46,7 @@ export default function AddComparison() {
     })
   };
 
-  const handleComparisonFieldChange = (index: number, event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleComparisonFieldChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setComparisonFields((prevState) => {
       const updatedFields = [...prevState];
       updatedFields[index] = {
@@ -54,13 +54,13 @@ export default function AddComparison() {
         [event.target.name]: event.target.value,
       }
       return updatedFields
-    })   
+    })
   }
 
   // Fix this form
   const handleSubmit = async () => {
     try {
-      return await createComparison({comparison, comparisonFields})
+      return await createComparison({ comparison, comparisonFields })
     } catch (error) {
       console.log('failed to add:', error);
     }
@@ -81,10 +81,24 @@ export default function AddComparison() {
           <div className="form-control col-span-7">
             <input onChange={(e) => handleComparisonChange(e)} type="text" id="description" name="description" placeholder="Comparison Description" className="input input-bordered" />
           </div>
+          <div className="form-control col-span-full">
+            <div role="tablist" className="tabs tabs-boxed">
+              <input onChange={(e) => handleComparisonChange(e)} checked={comparison.winnerIs === ComparisonWinner.enumValues[0]} type="radio" name="winnerIs" value={ComparisonWinner.enumValues[0]} role="tab" className="tab" aria-label="Left winner" />
+              <input
+                onChange={(e) => handleComparisonChange(e)}
+                checked={comparison.winnerIs === ComparisonWinner.enumValues[1]}
+                type="radio"
+                name="winnerIs"
+                value={ComparisonWinner.enumValues[1]}
+                role="tab"
+                className="tab rounded-lg"
+                aria-label="Right winner" />
+            </div>
+          </div>
         </div>
         <br />
         {comparisonFields.map((comparisonField, index) => (
-          <div key={index} className="card bg-base-100 shadow-2xl p-6 mb-6">
+          <div key={index} className="card bg-base-100 shadow-2xl p-6 gap-6 mb-6">
             <div className="form-control">
               <input onChange={(e) => handleComparisonFieldChange(index, e)} type="text" name="title" placeholder="State managers, Learning curve, Mobile support..." className="input input-bordered" />
             </div>
@@ -98,6 +112,21 @@ export default function AddComparison() {
                 <textarea onChange={(e) => handleComparisonFieldChange(index, e)} name="rightComparison" placeholder="Add info here:" className='input input-bordered min-h-28 py-2 text-sm' />
               </div>
             </div>
+            <div className="form-control col-span-7">
+              <div role="tablist" className="tabs tabs-boxed col-span-full">
+                <input onChange={(e) => handleComparisonFieldChange(index, e)} checked={comparisonField.winnerField == ComparisonWinner.enumValues[0]} type="radio" name="winnerField" value={ComparisonWinner.enumValues[0]} role="tab" className="tab" aria-label="Left field winner" />
+                <input
+                  onChange={(e) => handleComparisonFieldChange(index, e)}
+                  checked={comparisonField.winnerField == ComparisonWinner.enumValues[1]}
+                  type="radio"
+                  name="winnerField"
+                  value={ComparisonWinner.enumValues[1]}
+                  role="tab"
+                  className="tab"
+                  aria-label="Right field winner" />
+              </div>
+            </div>
+
             <button onClick={() => deleteComparisonField(index)} className="btn btn-outline btn-error btn-x mt-8">Delete Field</button>
           </div>
         ))}
