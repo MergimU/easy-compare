@@ -12,7 +12,7 @@ export default async function Dashboard() {
             <h2 className="card-title text-center">{`${comparison.leftTitle} vs ${comparison.rightTitle}`}</h2>
             <p>{comparison.description}</p>
             <div className="card-actions justify-end">
-              <Link href="/dashboard/project-1" className="btn btn-primary text-white w-full">Show comparison</Link>
+              <Link href={`/dashboard/${comparison.id}`}className="btn btn-primary text-white w-full">Show comparison</Link>
             </div>
           </div>
         </div>
