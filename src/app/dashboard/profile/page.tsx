@@ -1,9 +1,9 @@
-import type { Metadata } from 'next'
-import { userSession } from '@app/actions/user'
+import type { Metadata } from 'next';
+import { userSession } from '@app/actions/user';
 
 export const metadata: Metadata = {
-  title: "Profile settings"
-}
+  title: 'Profile settings',
+};
 
 export default async function Profile() {
   const user = await userSession();
@@ -17,5 +17,5 @@ export default async function Profile() {
         </>
       )}
     </div>
-  )
+  );
 }
