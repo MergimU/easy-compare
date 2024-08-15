@@ -17,12 +17,6 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 export default async function Comparison({ params }: Props) {
   const comparisonData = await getComparison(params.comparison);
 
-  const prms = new Promise((res, rej) => {
-    setTimeout(() => {
-      res('done');
-    }, 10000);
-  });
-
   return (
     <div className="prose flex flex-col items-center">
       {comparisonData && (

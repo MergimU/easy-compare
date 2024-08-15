@@ -60,10 +60,18 @@ export default function AddComparison() {
   ) => {
     setComparisonFields((prevState) => {
       const updatedFields = [...prevState];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        [event.target.name]: event.target.value,
-      };
+
+      if (event.target.name.startsWith('winnerField')) {
+        updatedFields[index] = {
+          ...updatedFields[index],
+          winnerField: ComparisonWinner.enumValues[parseInt(event.target.value)],
+        };
+      } else {
+        updatedFields[index] = {
+          ...updatedFields[index],
+          [event.target.name]: event.target.value,
+        };
+      }
       return updatedFields;
     });
   };
@@ -91,7 +99,7 @@ export default function AddComparison() {
       </p>
       <button onClick={clearInputs}>Click</button>
       <form className="flex flex-col">
-        <div className="card grid grid-cols-7 gap-6 bg-base-100 p-6 shadow-2xl">
+        <div className="card mb-6 grid grid-cols-7 gap-6 bg-base-100 p-6 shadow-2xl">
           <div className="gird form-control col-span-3">
             <input
               onChange={(e) => handleComparisonChange(e)}
@@ -151,9 +159,9 @@ export default function AddComparison() {
             </div>
           </div>
         </div>
-        <br />
         {comparisonFields.map((comparisonField, index) => (
           <div key={index} className="card mb-6 gap-6 bg-base-100 p-6 shadow-2xl">
+            Index: {index}
             <div className="form-control">
               <input
                 onChange={(e) => handleComparisonFieldChange(index, e)}
@@ -164,7 +172,6 @@ export default function AddComparison() {
                 className="input input-bordered"
               />
             </div>
-            <br />
             <div className="flex flex-row items-center gap-4">
               <div className="form-control flex-1">
                 <textarea
@@ -190,31 +197,28 @@ export default function AddComparison() {
               <div role="tablist" className="tabs-boxed tabs col-span-full">
                 <input
                   onChange={(e) => handleComparisonFieldChange(index, e)}
-                  checked={comparisonField.winnerField == ComparisonWinner.enumValues[0]}
+                  checked={comparisonField.winnerField === ComparisonWinner.enumValues[0]}
                   type="radio"
-                  name="winnerField"
-                  value={ComparisonWinner.enumValues[0]}
+                  name={`winnerField-${index}`}
+                  value={0}
                   role="tab"
                   className="tab"
                   aria-label="Left field winner"
                 />
                 <input
                   onChange={(e) => handleComparisonFieldChange(index, e)}
-                  checked={comparisonField.winnerField == ComparisonWinner.enumValues[1]}
+                  checked={comparisonField.winnerField === ComparisonWinner.enumValues[1]}
                   type="radio"
-                  name="winnerField"
-                  value={ComparisonWinner.enumValues[1]}
+                  name={`winnerField-${index}`}
+                  value={1}
                   role="tab"
                   className="tab"
                   aria-label="Right field winner"
                 />
               </div>
             </div>
-
-            <button
-              onClick={() => deleteComparisonField(index)}
-              className="btn-x btn btn-outline btn-error mt-8"
-            >
+            <div className="divider"></div>
+            <button onClick={() => deleteComparisonField(index)} className="btn-x btn btn-outline btn-error">
               Delete Field
             </button>
           </div>
