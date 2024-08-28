@@ -5,8 +5,8 @@ import { SubmitButton } from '@app/ui/submit-button';
 import { PlusCircleIcon } from '@heroicons/react/16/solid';
 import { createComparison } from 'drizzle/queries';
 
-import type { ComparisonField, NewComparison } from 'drizzle/dbTypes';
-import { ComparisonWinner } from 'drizzle/schema';
+import type { ComparisonField, Comparison } from 'drizzle/dbTypes';
+import { comparisonWinnerEnum } from 'drizzle/schema';
 
 export default function AddComparison() {
   // State default
@@ -15,18 +15,18 @@ export default function AddComparison() {
       leftTitle: '',
       rightTitle: '',
       description: '',
-      winnerIs: ComparisonWinner.enumValues[0],
+      winnerIs: comparisonWinnerEnum.enumValues[0],
     },
     comparisonField: {
       title: '',
       leftComparison: '',
       rightComparison: '',
-      winnerField: ComparisonWinner.enumValues[0],
+      winnerField: comparisonWinnerEnum.enumValues[0],
     },
   };
 
   // State
-  const [comparison, setComparison] = useState<Omit<NewComparison, 'id' | 'authorId'>>({
+  const [comparison, setComparison] = useState<Omit<Comparison, 'id' | 'userId'>>({
     ...initState.comparison,
   });
   const [comparisonFields, setComparisonFields] = useState<Omit<ComparisonField, 'id' | 'comparisonId'>[]>([
@@ -64,7 +64,7 @@ export default function AddComparison() {
       if (event.target.name.startsWith('winnerField')) {
         updatedFields[index] = {
           ...updatedFields[index],
-          winnerField: ComparisonWinner.enumValues[parseInt(event.target.value)],
+          winnerField: comparisonWinnerEnum.enumValues[parseInt(event.target.value)],
         };
       } else {
         updatedFields[index] = {
@@ -138,20 +138,20 @@ export default function AddComparison() {
             <div role="tablist" className="tabs-boxed tabs">
               <input
                 onChange={(e) => handleComparisonChange(e)}
-                checked={comparison.winnerIs === ComparisonWinner.enumValues[0]}
+                checked={comparison.winnerIs === comparisonWinnerEnum.enumValues[0]}
                 type="radio"
                 name="winnerIs"
-                value={ComparisonWinner.enumValues[0]}
+                value={comparisonWinnerEnum.enumValues[0]}
                 role="tab"
                 className="tab"
                 aria-label="Left winner"
               />
               <input
                 onChange={(e) => handleComparisonChange(e)}
-                checked={comparison.winnerIs === ComparisonWinner.enumValues[1]}
+                checked={comparison.winnerIs === comparisonWinnerEnum.enumValues[1]}
                 type="radio"
                 name="winnerIs"
-                value={ComparisonWinner.enumValues[1]}
+                value={comparisonWinnerEnum.enumValues[1]}
                 role="tab"
                 className="tab rounded-lg"
                 aria-label="Right winner"
@@ -161,7 +161,6 @@ export default function AddComparison() {
         </div>
         {comparisonFields.map((comparisonField, index) => (
           <div key={index} className="card mb-6 gap-6 bg-base-100 p-6 shadow-2xl">
-            Index: {index}
             <div className="form-control">
               <input
                 onChange={(e) => handleComparisonFieldChange(index, e)}
@@ -197,7 +196,7 @@ export default function AddComparison() {
               <div role="tablist" className="tabs-boxed tabs col-span-full">
                 <input
                   onChange={(e) => handleComparisonFieldChange(index, e)}
-                  checked={comparisonField.winnerField === ComparisonWinner.enumValues[0]}
+                  checked={comparisonField.winnerField === comparisonWinnerEnum.enumValues[0]}
                   type="radio"
                   name={`winnerField-${index}`}
                   value={0}
@@ -207,7 +206,7 @@ export default function AddComparison() {
                 />
                 <input
                   onChange={(e) => handleComparisonFieldChange(index, e)}
-                  checked={comparisonField.winnerField === ComparisonWinner.enumValues[1]}
+                  checked={comparisonField.winnerField === comparisonWinnerEnum.enumValues[1]}
                   type="radio"
                   name={`winnerField-${index}`}
                   value={1}

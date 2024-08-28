@@ -1,57 +1,81 @@
-import { pgTable, uuid, varchar, timestamp, pgEnum, primaryKey, text } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { pgTable, uuid, varchar, timestamp, pgEnum, text } from 'drizzle-orm/pg-core';
 
-export const UserRole = pgEnum('userRole', ['ADMIN', 'BASIC']);
-export const ComparisonWinner = pgEnum('winner', ['LEFTCOMPARISON', 'RIGHTCOMPARISON']);
+export const userRoleEnum = pgEnum('userRole', ['ADMIN', 'BASIC']);
+export const comparisonWinnerEnum = pgEnum('winner', ['LEFTCOMPARISON', 'RIGHTCOMPARISON']);
 
-export const UsersTable = pgTable('users', {
+export const users = pgTable('users', {
   id: uuid('id').primaryKey().notNull(),
-  createdAt: timestamp('createdAt').defaultNow().notNull(),
-  role: UserRole('role').default('ADMIN').notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),
-  full_name: varchar('full_name', { length: 256 }),
-  avatar_url: text('avatar_url'),
+  createdAt: timestamp('createdAt', { withTimezone: true }).defaultNow().notNull(),
+  role: userRoleEnum('role').default('ADMIN').notNull(),
 });
 
-export const Comparison = pgTable('comparison', {
+export const profiles = pgTable('profiles', {
+  id: uuid('id').primaryKey().notNull(),
+  full_name: varchar('full_name', { length: 256 }),
+  avatar_url: text('avatar_url'),
+  updatedAt: timestamp('updatedAt', { withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
+  userId: uuid('userId').references(() => users.id, { onDelete: 'cascade' }),
+});
+
+export const comparisons = pgTable('comparisons', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   leftTitle: varchar('leftTitle', { length: 256 }).notNull(),
   rightTitle: varchar('rightTitle', { length: 256 }).notNull(),
   description: varchar('description', { length: 256 }),
-  winnerIs: ComparisonWinner('winner').notNull(),
-  createdAt: timestamp('createdAt').defaultNow().notNull(),
-  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
-  authorId: uuid('authorId')
-    .references(() => UsersTable.id)
-    .notNull(),
+  winnerIs: comparisonWinnerEnum('winner').notNull(),
+  createdAt: timestamp('createdAt', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt', { withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
+  userId: uuid('userId').references(() => users.id, { onDelete: 'cascade' }),
 });
 
-export const ComparisonField = pgTable('comparisonField', {
+export const comparisonFields = pgTable('comparisonFields', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   title: varchar('title', { length: 256 }).notNull().unique(),
   leftComparison: varchar('leftComparison', { length: 256 }),
   rightComparison: varchar('rightComparison', { length: 256 }),
-  winnerField: ComparisonWinner('winner').notNull(),
-  createdAt: timestamp('createdAt').defaultNow().notNull(),
-  updatedAt: timestamp('updatedAt').defaultNow().notNull(),
-  comparisonId: uuid('comparisonId')
-    .references(() => Comparison.id)
-    .notNull(),
+  winnerField: comparisonWinnerEnum('winner').notNull(),
+  createdAt: timestamp('createdAt', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt', { withTimezone: true })
+    .notNull()
+    .$onUpdate(() => new Date()),
+  comparisonId: uuid('comparisonId').references(() => comparisons.id, { onDelete: 'cascade' }),
 });
 
-export const ComparisonTable = pgTable(
-  'comparisonTable',
-  {
-    comparisonId: uuid('comparisonId')
-      .references(() => Comparison.id)
-      .notNull(),
-    comparisonFieldId: uuid('comparisonFieldId')
-      .references(() => ComparisonField.id)
-      .notNull(),
-  },
-  (table) => {
-    return {
-      // Composite primaryKey
-      pk: primaryKey({ columns: [table.comparisonId, table.comparisonFieldId] }),
-    };
-  },
-);
+/*=============================================
+=            relations            =
+=============================================*/
+
+export const userRelations = relations(users, ({ many }) => ({
+  profiles: many(profiles),
+  comparisons: many(comparisons),
+}));
+
+export const profileRelations = relations(profiles, ({ one }) => ({
+  user: one(users, {
+    fields: [profiles.userId],
+    references: [users.id],
+  }),
+}));
+
+export const comparisonRelations = relations(comparisons, ({ one, many }) => ({
+  user: one(users, {
+    fields: [comparisons.userId],
+    references: [users.id],
+  }),
+  comparisonFields: many(comparisonFields),
+}));
+
+export const comparisonFieldRelations = relations(comparisonFields, ({ one }) => ({
+  comparison: one(comparisons, {
+    fields: [comparisonFields.comparisonId],
+    references: [comparisons.id],
+  }),
+}));
+
+/*=====  End of relations  ======*/

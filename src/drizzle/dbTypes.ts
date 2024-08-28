@@ -1,5 +1,5 @@
 import * as schema from './schema';
 
-export type NewUser = typeof schema.UsersTable.$inferInsert;
-export type NewComparison = typeof schema.Comparison.$inferInsert;
-export type ComparisonField = typeof schema.ComparisonField.$inferInsert;
+export type User = typeof schema.users.$inferInsert;
+export type Comparison = typeof schema.comparisons.$inferInsert;
+export type ComparisonField = typeof schema.comparisonFields.$inferInsert;

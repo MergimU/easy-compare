@@ -3,16 +3,17 @@
 import { db } from './db';
 import * as schema from './schema';
 import { eq } from 'drizzle-orm';
-import { NewUser, NewComparison, ComparisonField } from './dbTypes';
+import type { User, Comparison, ComparisonField } from './dbTypes';
 import { userSession } from '@app/actions/user';
+import type { RowList } from 'postgres';
 
 /**
  *
  * @param user User input details
  * @returns Newly created user to db
  */
-export const createUser = async (user: NewUser) => {
-  return await db.insert(schema.UsersTable).values({
+export const createUser = async (user: User): Promise<RowList<never>[]> => {
+  return await db.insert(schema.users).values({
     id: user.id,
     email: user.email,
     createdAt: user.createdAt,
@@ -20,14 +21,14 @@ export const createUser = async (user: NewUser) => {
   });
 };
 
-/**
- *
- * @param id Get user based on id
- * @returns User from db
- */
-export const getUser = async (id: string) => {
-  return await db.select().from(schema.UsersTable).where(eq(schema.UsersTable.id, id)).limit(1);
-};
+// /**
+//  *
+//  * @param id Get user based on id
+//  * @returns User from db
+//  */
+// export const getUser = async (id: string): Promise<User[] | null> => {
+//   return await db.select().from(schema.users).where(eq(schema.users.id, id)).limit(1);
+// };
 /**
  *
  * @param comparison Comparison (leftTitle, rightTitle, description)
@@ -38,7 +39,7 @@ export const createComparison = async ({
   comparison,
   comparisonFields,
 }: {
-  comparison: Omit<NewComparison, 'id' | 'authorId'>; // exclude id and authorId
+  comparison: Omit<Comparison, 'id' | 'authorId'>; // exclude id and authorId
   comparisonFields: Omit<ComparisonField, 'id' | 'comparisonId'>[];
 }) => {
   try {
@@ -46,13 +47,13 @@ export const createComparison = async ({
     if (user) {
       // DB: insert comparison
       const comparisonInsert = await db
-        .insert(schema.Comparison)
+        .insert(schema.comparisons)
         .values({
           ...comparison,
-          authorId: user.id,
+          userId: user.id,
         })
         .returning({
-          id: schema.Comparison.id,
+          id: schema.comparisons.id,
         });
 
       // Add comparisonId to each comparisonField
@@ -61,7 +62,7 @@ export const createComparison = async ({
       });
 
       // DB: Insert comparisonFields
-      await db.insert(schema.ComparisonField).values([...compFieldsWithCompId]);
+      await db.insert(schema.comparisonFields).values([...compFieldsWithCompId]);
 
       return comparisonInsert;
     }
@@ -69,13 +70,19 @@ export const createComparison = async ({
     console.log(error as Error);
   }
 };
+
 /**
  *
- * @returns All db Comparisons
+ * @returns Comparisons with titles and description only, no fields
  */
 export const getComparisons = async () => {
   try {
-    return await db.select().from(schema.Comparison);
+    const user = await userSession();
+    if (user) {
+      return await db.query.comparisons.findMany({
+        where: eq(schema.comparisons.userId, user.id),
+      });
+    }
   } catch (error) {
     console.log(error as Error);
   }
@@ -86,23 +93,19 @@ export const getComparisons = async () => {
  * @param id Comparison id
  * @returns Comparison db data
  */
-export const getComparison = async (id: string) => {
+
+// export const getComparison = async ({ id }: Pick<NewUser, 'id'>) => {
+export const getComparison = async ({ id }: Pick<User, 'id'>) => {
   try {
-    const comparisonData = await db
-      .select()
-      .from(schema.Comparison)
-      .where(eq(schema.Comparison.id, id))
-      .limit(1);
-    return comparisonData[0];
+    const comparisonWithFields = await db.query.comparisons.findMany({
+      where: (comparisons, { eq }) => eq(comparisons.id, id),
+      with: {
+        comparisonFields: true,
+      },
+    });
+
+    return comparisonWithFields[0];
   } catch (error) {
     console.log(error as Error);
   }
-};
-
-/**
- *
- * @returns All users
- */
-export const getUsers = async () => {
-  return await db.select().from(schema.UsersTable);
 };

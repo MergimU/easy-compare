@@ -8,20 +8,20 @@ type Props = {
 };
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-  const comparisonData = await getComparison(params.comparison);
+  const comparisonData = await getComparison({ id: params.comparison });
   return {
-    title: comparisonData ? `Comparing ${comparisonData.leftTitle}` : 'Comparing two items',
+    title: comparisonData ? `Comparing ${comparisonData?.leftTitle}` : 'Comparing two items',
   };
 };
 
 export default async function Comparison({ params }: Props) {
-  const comparisonData = await getComparison(params.comparison);
+  const comparisonData = await getComparison({ id: params.comparison });
 
   return (
     <div className="prose flex flex-col items-center">
       {comparisonData && (
         <>
-          <h1>{`${comparisonData.leftTitle} vs ${comparisonData.rightTitle}`}</h1>
+          <h1>{`${comparisonData?.leftTitle} vs ${comparisonData.rightTitle}`}</h1>
         </>
       )}
     </div>
