@@ -12,13 +12,17 @@ import type { RowList } from 'postgres';
  * @param user User input details
  * @returns Newly created user to db
  */
-export const createUser = async (user: User): Promise<RowList<never>[]> => {
-  return await db.insert(schema.users).values({
-    id: user.id,
-    email: user.email,
-    createdAt: user.createdAt,
-    role: user.role,
-  });
+export const createUser = async (user: User): Promise<RowList<never>[] | undefined> => {
+  try {
+    return await db.insert(schema.users).values({
+      id: user.id,
+      email: user.email,
+      createdAt: user.createdAt,
+      role: user.role,
+    });
+  } catch (error) {
+    console.log('createUser Error', error);
+  }
 };
 
 // /**
@@ -60,10 +64,8 @@ export const createComparison = async ({
       const compFieldsWithCompId = comparisonFields.map((comp) => {
         return { ...comp, comparisonId: comparisonInsert[0].id };
       });
-
       // DB: Insert comparisonFields
       await db.insert(schema.comparisonFields).values([...compFieldsWithCompId]);
-
       return comparisonInsert;
     }
   } catch (error) {
@@ -91,14 +93,14 @@ export const getComparisons = async () => {
 /**
  *
  * @param id Comparison id
- * @returns Comparison db data
+ * @returns Comparison with all fields
  */
 
 // export const getComparison = async ({ id }: Pick<NewUser, 'id'>) => {
 export const getComparison = async ({ id }: Pick<User, 'id'>) => {
   try {
     const comparisonWithFields = await db.query.comparisons.findMany({
-      where: (comparisons, { eq }) => eq(comparisons.id, id),
+      where: eq(schema.comparisons.id, id),
       with: {
         comparisonFields: true,
       },

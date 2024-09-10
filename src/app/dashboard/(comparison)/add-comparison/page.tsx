@@ -8,22 +8,26 @@ import { createComparison } from 'drizzle/queries';
 import type { ComparisonField, Comparison } from 'drizzle/dbTypes';
 import { comparisonWinnerEnum } from 'drizzle/schema';
 
+/**
+ * initState is used outside the function to avoid re-creation of it on state changes
+ */
+const initState = {
+  comparison: {
+    leftTitle: '',
+    rightTitle: '',
+    description: '',
+    winnerIs: comparisonWinnerEnum.enumValues[0],
+  },
+  comparisonField: {
+    title: '',
+    leftComparison: '',
+    rightComparison: '',
+    winnerField: comparisonWinnerEnum.enumValues[0],
+  },
+};
+
 export default function AddComparison() {
   // State default
-  const initState = {
-    comparison: {
-      leftTitle: '',
-      rightTitle: '',
-      description: '',
-      winnerIs: comparisonWinnerEnum.enumValues[0],
-    },
-    comparisonField: {
-      title: '',
-      leftComparison: '',
-      rightComparison: '',
-      winnerField: comparisonWinnerEnum.enumValues[0],
-    },
-  };
 
   // State
   const [comparison, setComparison] = useState<Omit<Comparison, 'id' | 'userId'>>({
@@ -97,7 +101,6 @@ export default function AddComparison() {
         Please choose the titles of what you are comparing and add as many input fields as you want for
         comparison
       </p>
-      <button onClick={clearInputs}>Click</button>
       <form className="flex flex-col">
         <div className="card mb-6 grid grid-cols-7 gap-6 bg-base-100 p-6 shadow-2xl">
           <div className="gird form-control col-span-3">

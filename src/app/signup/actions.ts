@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -8,17 +8,17 @@ import { headers } from 'next/headers';
 import { createUser } from 'drizzle/queries';
 
 /**
- * 
+ *
  * @param formData User email and password
  */
 export const login = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
   const supabase = createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
-    password
+    password,
   });
 
   if (error) {
@@ -26,30 +26,30 @@ export const login = async (formData: FormData) => {
   }
 
   revalidatePath('/', 'layout');
-  return redirect('/dashboard')
-}
+  return redirect('/dashboard');
+};
 
 /**
- * 
+ *
  * @param formData User email and password
- * @returns New created user 
+ * @returns New created user
  */
 export const signup = async (formData: FormData) => {
-  const origin = headers().get("origin");
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const origin = headers().get('origin');
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${origin}/api/auth/callback`
-    }
+      emailRedirectTo: `${origin}/api/auth/callback`,
+    },
   });
 
   if (error) {
-    return redirect(`/signup?message=${error}`)
+    return redirect(`/signup?message=${error}`);
   }
 
   try {
@@ -59,13 +59,13 @@ export const signup = async (formData: FormData) => {
         email: email,
         createdAt: new Date(),
         role: 'ADMIN',
-      }) 
+      });
     }
-  } catch(err) {
+  } catch (err) {
     console.log('error db inserting user', err);
     return redirect(`/login?message=${error}`);
   }
 
   revalidatePath('/', 'layout');
   return redirect('/login?message=Account created successfully');
-}
+};
