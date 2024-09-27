@@ -27,8 +27,6 @@ const initState = {
 };
 
 export default function AddComparison() {
-  // State default
-
   // State
   const [comparison, setComparison] = useState<Omit<Comparison, 'id' | 'userId'>>({
     ...initState.comparison,
